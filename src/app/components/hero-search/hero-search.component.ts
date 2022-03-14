@@ -12,7 +12,9 @@ import { HeroService } from 'src/app/services/hero.service';
 })
 export class HeroSearchComponent implements OnInit {
  
-  // heroes: Hero[] = [];
+  heroes: Hero[] = []; //funziona insieme al searchOLD 
+  timeOut:  any;
+
   heroes$!: Observable<Hero[]>;
   private searchTerms = new Subject<string>();                               //subject è un tipo di osservabile che va a ricreare una chiamata che si ripete più volte
 
@@ -29,9 +31,15 @@ export class HeroSearchComponent implements OnInit {
     );
   }
 
-  // search(name: string) : void {
-  //   //this.heroService.searchHeroes(name).subscribe(hero => this.heroes = hero);
-  // }
+  searchOLD(name: string) : void {
+    if (this.timeOut) {
+      clearTimeout(this.timeOut)                                              //pulisco il timeout se esiste precedentemente e poi ne setto un altro con un ritardo di 300mls -> il timeout la prima volta non esiste perchè inizializzato come <any>
+    }
+    this.timeOut = setTimeout(() => {
+      this.heroService.searchHeroes(name).subscribe(hero => this.heroes = hero);
+    }, 300);
+    
+  }
 
   search(term: string): void {
     this.searchTerms.next(term);
